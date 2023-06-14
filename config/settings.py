@@ -6,13 +6,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = env_config('SECRET_KEY')
 
-DEBUG = True
+DEBUG = env_config('DEBUG')
 
 ALLOWED_HOSTS = []
 
 MY_APPS = [
     'apps.accounts',
     'apps.hospitals',
+    'apps.chat',
 ]
 
 INSTALLED_APPS = [
@@ -22,7 +23,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework'
+    'rest_framework',
+    'channels',
 ] + MY_APPS
 
 MIDDLEWARE = [
