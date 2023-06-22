@@ -1,8 +1,14 @@
 version: '3'
 services:
   web:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
+    command: sh -c "sleep 10 && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     ports:
-      - "8000:8000"
+      - 80:8000
+    networks:
+      - my-network
+    env_file:
+      - .env
+
+networks:
+  my-network:

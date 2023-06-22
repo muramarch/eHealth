@@ -13,6 +13,7 @@ class Hospital(models.Model):
         default=0.0
     )
 
+
 class Doctor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     hospital = models.ForeignKey(Hospital, on_delete=models.CASCADE)
@@ -31,3 +32,10 @@ class Review(models.Model):
     comment = models.TextField()
 
 
+class Appointment(models.Model):
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    scheduled_time = models.DateTimeField()
+    reason = models.CharField(max_length=100)
+    is_confirmed = models.BooleanField(default=False)
+    is_completed = models.BooleanField(default=False)

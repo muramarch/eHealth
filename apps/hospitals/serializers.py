@@ -1,17 +1,29 @@
 from rest_framework import serializers
 
 from apps.accounts.serializers import UserSerializer
-from .models import Hospital, Doctor, Review
+from .models import Hospital, Doctor, Review, Appointment
 
 class HospitalSerializer(serializers.ModelSerializer):
+    average_rating = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = Hospital
         fields = '__all__'
-        
-# hospital = Hospital.objects.get(pk=1)  # Получение экземпляра класса Doctor из базы данных
-# serializer = HospitalSerializer(hospital)  # Создание сериализатора
-# serialized_data = serializer.data  # Получение сериализованных данных
-# print(serialized_data)
+
+    def get_average_rating(self, hospital):
+        reviews = Review.objects.filter(hospital=hospital)
+        if reviews.exists():
+            total_ratings = sum(review.rating for review in reviews)
+            average_rating = total_ratings / reviews.count()
+            return average_rating
+        return None
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = '__all__'
+
 
 class DoctorSerializer(serializers.ModelSerializer):
     user = UserSerializer()
@@ -20,17 +32,8 @@ class DoctorSerializer(serializers.ModelSerializer):
         model = Doctor
         fields = '__all__'
         
-# doctor = Doctor.objects.get(pk=1)  # Получение экземпляра класса Doctor из базы данных
-# serializer = DoctorSerializer(doctor)  # Создание сериализатора
-# serialized_data = serializer.data  # Получение сериализованных данных
-# print(serialized_data)
 
-class ReviewSerializer(serializers.ModelSerializer):
+class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Review
+        model = Appointment
         fields = '__all__'
-        
-# review = Review.objects.filter(pk=1).first()  # Получение экземпляра класса Doctor из базы данных
-# serializer = ReviewSerializer(review)  # Создание сериализатора
-# serialized_data = serializer.data  # Получение сериализованных данных
-# print(serialized_data)
